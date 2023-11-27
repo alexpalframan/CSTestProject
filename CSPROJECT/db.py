@@ -4,23 +4,33 @@ from firebase_admin import db
 import serial
 import random
 import time
-def doSomething(response):
-    print(response.data)
 
-cred = credentials.Certificate(r"C:\Users\18APalframan.ACC\Documents\CS_2024\CSPROJECT\lc-cs-test-firebase-adminsdk-wis0e-808f656c77.JSON")
-firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://lc-cs-test-default-rtdb.europe-west1.firebasedatabase.app/'
+
+ser = serial.Serial()
+ser.baudrate = 115200
+ser.port = "COM5"
+ser.open()
+
+cred = credentials.Certificate("C:/Users/imale/Documents/Schoolwork/Computer Science/CSTestProject-main/lc-cs-test-firebase-adminsdk-wis0e-d90fe5e569.json")
+firebase_admin.initialize_app(cred, {'databaseURL': 'https://lc-cs-test-default-rtdb.europe-west1.firebasedatabase.app/'
 })
 
 ref = db.reference()
-ref = db.reference().child('transistor')
-ref.update({'transistor':''})
-ref = db.reference().child('transistor')
-ref.listen(doSomething)
+ref.update({'temperature_log':''})
+ref = db.reference().child('temperature log')
+
+source = input("Please input the source of our data")
+
 
 while True:
-    x = random.randint(0,10)
-    ref.update({str(int(time.time())):{'x'}})
+    mb_temperature = str(ser.readline().decode('utf-8'))
+    mb_temperature = mb_temperature.replace(" ","")
+    mb_temperature = mb_temperature.replace("\r\n","")
+    if mb_temperature.isdigit():
+        ref.update({str(int(time.time())): {'Temperature':mb_temperature, 'Location': source}})
+    
+    else:
+        print("Check data source.")
     time.sleep(5)
 
 

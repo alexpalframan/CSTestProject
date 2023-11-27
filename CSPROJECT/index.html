@@ -46,27 +46,27 @@
         const app = initializeApp(firebaseConfig);
         const ctx = document.getElementById('timeChart');
         const db = getDatabase();//get a link to the database     
-        const commentsRef = ref(db, "users/");//set the reference to the node you want to use
+        const commentsRef = ref(db, "temperature log/");//set the reference to the node you want to use
        
 
 // Find each value added to the database and get it ready for graphing
         onChildAdded(commentsRef, (data) => {
   console.log(data.key, data.val());
-        //     var date = new Date(data.key * 1000)
-        //     let mm = date.getMonth() + 1; // Months start at 0!
-        // let dd = date.getDate();
-        // let hr = date.getHours();
-        // let mn = date.getMinutes();
-        // let sc = date.getSeconds();
+             var date = new Date(data.key * 1000)
+             let mm = date.getMonth() + 1; // Months start at 0!
+         let dd = date.getDate();
+         let hr = date.getHours();
+         let mn = date.getMinutes();
+         let sc = date.getSeconds();
         
-        // if (dd < 10) dd = '0' + dd;
-        // if (mm < 10) mm = '0' + mm;
-        // if (mn < 10) mn = '0' + mn;
+         if (dd < 10) dd = '0' + dd;
+         if (mm < 10) mm = '0' + mm;
+         if (mn < 10) mn = '0' + mn;
         
-        // const formatteddate = dd + '_' + mm + ' ' + hr +':'+ mn +':'+ sc;
-        // console.log(formatteddate)
-        // chart.data.labels.push(formatteddate);//add the key to the labels on the x-axis
-        chart.data.datasets[0].data.push(data.val().age);//add the temperature to the y-axis
+       const formatteddate = dd + '_' + mm + ' ' + hr +':'+ mn +':'+ sc;
+         console.log(formatteddate)
+         chart.data.labels.push(formatteddate);//add the key to the labels on the x-axis
+        chart.data.datasets[0].data.push(data.val().Temperature);//add the temperature to the y-axis
         chart.data.labels = chart.data.labels.slice(-30); //neagtive slice to only show 
         chart.data.datasets[0].data = chart.data.datasets[0].data.slice(-30);//the last 30 values on each axis
         chart.update('none');//don't do any animation           
@@ -77,7 +77,7 @@
         var chart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: ["age","height"], 
+        labels: [], 
         datasets: [{
           label: 'Temperature trace',
           data: [],
